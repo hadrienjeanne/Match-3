@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Grid.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Obstacles/IceHolder.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Obstacles/LockHolder.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Obstacles/ConcreteHolder.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Obstacles/SlimeHolder.tscn" type="PackedScene" id=5]
+
+[node name="Grid" type="Node2D"]
+script = ExtResource( 1 )
+empty_spaces = PoolVector2Array( 0, 0, 7, 0, 0, 9, 7, 9, 3, 4, 4, 4, 3, 5, 4, 5 )
+
+[node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="CollapseTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="RefillTimer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="IceHolder" parent="." instance=ExtResource( 2 )]
+obstacle_pieces = PoolVector2Array( 4, 0, 5, 0 )
+
+[node name="LockHolder" parent="." instance=ExtResource( 3 )]
+obstacle_pieces = PoolVector2Array( 3, 3, 6, 6 )
+moveable = false
+
+[node name="ConcreteHolder" parent="." instance=ExtResource( 4 )]
+obstacle_pieces = PoolVector2Array( 2, 6, 3, 6 )
+
+[node name="SlimeHolder" parent="." instance=ExtResource( 5 )]
+obstacle_pieces = PoolVector2Array( 6, 3, 7, 3 )
+
+[connection signal="timeout" from="DestroyTimer" to="." method="_on_DestroyTimer_timeout"]
+[connection signal="timeout" from="CollapseTimer" to="." method="_on_CollapseTimer_timeout"]
+[connection signal="timeout" from="RefillTimer" to="." method="_on_RefillTimer_timeout"]

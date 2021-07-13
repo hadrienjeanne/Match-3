@@ -22,9 +22,9 @@ var pieces = [
 	preload("res://Scenes/Pieces/BluePiece.tscn"),
 	preload("res://Scenes/Pieces/GreenPiece.tscn"),
 	preload("res://Scenes/Pieces/PurplePiece.tscn"),
-	preload("res://Scenes/Pieces/OrangePiece.tscn"),
-	# preload("res://Scenes/Pieces/RedPiece.tscn"),
-	# preload("res://Scenes/Pieces/YellowPiece.tscn"),
+	# preload("res://Scenes/Pieces/OrangePiece.tscn"),
+	preload("res://Scenes/Pieces/RedPiece.tscn"),
+	preload("res://Scenes/Pieces/YellowPiece.tscn"),
 ]
 enum {BLUE, GREEN, PURPLE, ORANGE, RED, YELLOW}
 
@@ -344,48 +344,50 @@ func find_normal_neighbour(col, row) -> Vector2:
 # searches for bombs in the current_matches array
 func find_boosters() -> Array:
 	var found_boosters := []
-	print_debug("matches: ", current_matches)
-	var matches := current_matches.size()
 	
-	for i in matches:
-		var _col :int = current_matches[i].x
-		var _row :int = current_matches[i].y
-		if grid[_col][_row].is_in_group("Piece"):
-			var _color :String = grid[_col][_row].color
+	if current_matches.size() > 3:
 			
-			var _col_matched := 0
-			var _row_matched := 0
-
-			for j in matches:
-				var _this_col :int = current_matches[j].x
-				var _this_row :int = current_matches[j].y
-				if grid[_this_col][_this_row].is_in_group("Piece"):
-					var _this_color :String = grid[_this_col][_this_row].color
-					if _this_col == _col and _this_color == _color:
-						_col_matched += 1
-					if _this_row == _row and _this_color == _color:
-						_row_matched += 1
-			if _col_matched == 5 or _row_matched == 5:
-				make_booster(COLOR_BOOSTER)
-				found_boosters.append(COLOR_BOOSTER)
+		for pos in current_matches:
+			var _col : int = pos.x
+			var _row : int = pos.y
+			if grid[_col][_row].is_in_group("Piece"):
+				var _color :String = grid[_col][_row].color
+				
+				var _col_matched := 0
+				var _row_matched := 0
+				
+				for pos2 in current_matches:
+					var _this_col : int = pos2.x
+					var _this_row : int = pos2.y				
+					if grid[_this_col][_this_row].is_in_group("Piece"):
+						var _this_color : String = grid[_this_col][_this_row].color
+						if _this_col == _col and _this_color == _color:
+							_col_matched += 1
+						if _this_row == _row and _this_color == _color:
+							_row_matched += 1
+				print_debug("matches: ", current_matches, " col matched: ", _col_matched, " row matched: ", _row_matched)
+				if _col_matched == 5 or _row_matched == 5:
+					make_booster(COLOR_BOOSTER)
+					found_boosters.append(COLOR_BOOSTER)
+					break
+				elif _row_matched == 4:
+					make_booster(COL_BOOSTER)
+					found_boosters.append(COL_BOOSTER)
+					break
+				elif _col_matched == 4:
+					make_booster(ROW_BOOSTER)
+					found_boosters.append(ROW_BOOSTER)
+					break
+				elif _row_matched >= 3 and _col_matched >= 3:
+					make_booster(BOMB_BOOSTER)
+					found_boosters.append(BOMB_BOOSTER)
+					break
+				elif (_row_matched == 2 and _col_matched >= 2) or (_row_matched >= 2 and _col_matched == 2):
+					make_booster(HELICO_BOOSTER)
+					found_boosters.append(HELICO_BOOSTER)
+					break
+			if found_boosters.size() > 0:
 				break
-			elif _row_matched == 4:
-				make_booster(COL_BOOSTER)
-				found_boosters.append(COL_BOOSTER)
-				break
-			elif _col_matched == 4:
-				make_booster(ROW_BOOSTER)
-				found_boosters.append(ROW_BOOSTER)
-				break
-			elif _row_matched >= 3 and _col_matched >= 3:
-				make_booster(BOMB_BOOSTER)
-				found_boosters.append(BOMB_BOOSTER)
-				break
-			elif (_row_matched == 2 and _col_matched >= 2) or (_row_matched >= 2 and _col_matched == 2):
-				make_booster(HELICO_BOOSTER)
-				found_boosters.append(HELICO_BOOSTER)
-				break
-	print_debug("boosters:", found_boosters)
 	return found_boosters
 
 # make the swapped piece (piece_one or piece_two) the booster of type type
@@ -403,7 +405,7 @@ func make_booster(type: int) -> void:
 			grid[_col][_row] = b
 			booster_made = true
 		elif grid[_col][_row] == piece_two:
-			# make piece_one a booster
+			# make piece_two a booster
 			piece_two.queue_free()
 			var b = boosters[type].instance()
 			add_child(b)

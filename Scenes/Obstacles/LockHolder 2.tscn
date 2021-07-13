@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Obstacles/ObstacleHolder.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Obstacles/Lock.tscn" type="PackedScene" id=2]
+
+[node name="LockHolder" instance=ExtResource( 1 )]
+obstacle_scene = ExtResource( 2 )

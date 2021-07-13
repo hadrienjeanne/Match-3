@@ -11,7 +11,7 @@ script = ExtResource( 1 )
 empty_spaces = PoolVector2Array( 0, 0, 7, 0, 0, 9, 7, 9, 3, 4, 4, 4, 3, 5, 4, 5 )
 
 [node name="DestroyTimer" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.2
 one_shot = true
 
 [node name="CollapseTimer" type="Timer" parent="."]

@@ -1,10 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Candies/candy6_green_01.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Japan Assets/Pieces/size_256/Piece_green_256.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Pieces/Piece.tscn" type="PackedScene" id=2]
 
 [node name="GreenPiece" instance=ExtResource( 2 )]
 color = "green"
 
 [node name="Sprite" parent="." index="0"]
+scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 1 )

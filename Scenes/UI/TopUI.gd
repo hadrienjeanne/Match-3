@@ -1,6 +1,5 @@
 extends Control
 
-onready var score_label: Label = $Background/MarginContainer/HBoxContainer/ScoreLabel
 onready var turns_label: Label = $Background/MarginContainer/HBoxContainer/TurnsLabel
 onready var grid := get_node("../Grid")
 
